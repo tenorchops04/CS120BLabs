@@ -1,7 +1,7 @@
-/*	Author: cliza007
- *  Partner(s) Name: 
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
+/*	Author: Celvin Lizama Pena cliza007@ucr.edu
+ *  Partner(s) Name: none
+ *	Lab Section:22
+ *	Assignment: Lab #2  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
