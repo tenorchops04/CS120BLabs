@@ -1,6 +1,6 @@
-/*	Author: Celvin Lizama Pena cliza007@ucr.edu
+/*	Author: Celvin Lizama Pena
  *  Partner(s) Name: none
- *	Lab Section:22
+ *	Lab Section: 022
  *	Assignment: Lab #2  Exercise #4
  *	Exercise Description: [optional - include for your own benefit]
  *
