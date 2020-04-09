@@ -42,12 +42,28 @@ continue 5
 expectPORTD 0x5A
 checkResult
 
-test "PINA: 0x46, PORTB: 0x32, PORTC: 0x1E"
-setPINA 0x46
-setPINB 0x32
-setPINC 0x1E
+test "PINA: 0x00, PORTB: 0x00, PORTC: 0x00 => PORTD: 0x00"
+setPINA 0x00
+setPINB 0x00
+setPINC 0x00
 continue 5
-expectPORTD 0x95
+expectPORTD 0x00
+checkResult
+
+test "PINA: 0x20, PORTB: 0x20, PORTC: 0x20 => PORTD: 0x60"
+setPINA 0x20
+setPINB 0x20
+setPINC 0x20
+continue 5
+expectPORTD 0x60
+checkResult
+
+test "PINA: 0x04, PORTB: 0x04, PORTC: 0x04 => PORTD: 0x0C"
+setPINA 0x04
+setPINB 0x04
+setPINC 0x04
+continue 5
+expectPORTD 0x0C
 checkResult
 
 # Report on how many tests passed/tests ran

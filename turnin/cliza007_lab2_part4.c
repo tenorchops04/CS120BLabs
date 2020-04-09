@@ -1,7 +1,7 @@
-/*	Author: Celvin Lizama Pena
- *  Partner(s) Name: none
- *	Lab Section: 022
- *	Assignment: Lab #2  Exercise #4
+/*	Author: cliza007
+ *  Partner(s) Name: 
+ *	Lab Section:
+ *	Assignment: Lab #  Exercise #
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -23,13 +23,13 @@ int main(void) {
 	unsigned char tempA = 0x00;
 	unsigned char tempB = 0x00;
 	unsigned char tempC = 0x00;
-	unsigned char tempD = 0x00;
 
 	while(1) {
 	tempA = PINA;
 	tempB = PINB;
 	tempC = PINC;
 
+	unsigned char tempD = 0x00;
 	unsigned char totalWeight = tempA + tempB +tempC;
 
 	// Bits 7-2 hold the total weight. Bits 1 and 0 are left as 0.
