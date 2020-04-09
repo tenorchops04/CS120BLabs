@@ -31,6 +31,9 @@ int main(void) {
 	tempC = PINC;
 
 	unsigned char totalWeight = tempA + tempB +tempC;
+
+	// Bits 7-2 hold the total weight. Bits 1 and 0 are left as 0.
+	PORTD = totalWeight & 0xFC;
 	
 	// If the cart's total weight is greater than 140kg, set PD0 to 1.
 	if(totalWeight > 140){
@@ -42,7 +45,8 @@ int main(void) {
 		tempD = tempD | 0x02;
 	}
 	
-	PORTD = (totalWeight & 0xFC) | tempD;
+	// Put PD1 and PD0 into PORTD. PD7 - PD2 HOLD total weight.
+	PORTD = PORTD | tempD;
 	
 	}
 	return 1;
