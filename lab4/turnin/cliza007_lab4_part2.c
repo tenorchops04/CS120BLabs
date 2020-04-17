@@ -30,10 +30,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0pressed;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1pressed;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;
@@ -45,10 +45,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0wait;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1pressed;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;
@@ -60,10 +60,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0wait;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1pressed;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;
@@ -75,10 +75,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0pressed;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1wait;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;
@@ -90,10 +90,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0pressed;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1wait;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;
@@ -105,10 +105,10 @@ void Tick(){
 			else if(PINA == 0x01){
 				state = PA0pressed;
 			}
-			else if(PINA == 0x10){
+			else if(PINA == 0x02){
 				state = PA1pressed;
 			}
-			else if(PINA == 0x11){
+			else if(PINA == 0x03){
 				state = Reset;
 			}
 		break;

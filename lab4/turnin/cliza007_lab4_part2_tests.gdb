@@ -34,18 +34,18 @@ expectPORTC 0x08
 expect state PA0pressed
 checkResult
 
-test "PINA: 0x10 => PORTC: 0x06"
+test "PINA: 0x02 => PORTC: 0x06"
 set count  = 0x07
 set state = Start
-setPINA 0x10
+setPINA 0x02
 continue 2
 expectPORTC 0x06
 expect state PA1pressed
 checkResult
 
-test "PINA: 0x11 => PORTC: 0x00"
+test "PINA: 0x03 => PORTC: 0x00"
 set state = Start
-setPINA 0x11
+setPINA 0x03
 continue 2
 expectPORTC 0x00
 expect state Reset
