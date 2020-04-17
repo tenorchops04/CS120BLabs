@@ -39,7 +39,7 @@ continue 2
 setPINA 0x00
 continue 2
 expectPORTB 0x01
-expect state PB0on
+expect state PB0release
 checkResult
 
 test "PINA: 0x00, 0x01, 0x00 => PINB: 0x02"
@@ -51,7 +51,7 @@ continue 2
 setPINA 0x00
 continue 2
 expectPORTB 0x02
-expect state PB1on
+expect state PB1release
 checkResult
 
 # Add tests below

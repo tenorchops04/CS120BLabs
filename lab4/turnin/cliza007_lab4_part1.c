@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States{Start, PB0on, PB0pressed, PB1on, PB1pressed}state;
+enum States{Start, PB0on, PB0release, PB1on, PB1release}state;
 
 unsigned char isButtonPressed;
 unsigned char tempB;
@@ -26,37 +26,37 @@ void Tick(){
 
 		case PB0on:
 			if(isButtonPressed){
-				state = PB0pressed;
+				state = PB0release;
 			}
 			else{
 				state = PB0on;
 			}
 		break;
 
-		case PB0pressed:
+		case PB0release:
 			if(isButtonPressed){
-				state = PB0pressed;
+				state = PB1on;
 			}
 			else{
-				state = PB1on;
+				state = PB0release;
 			}
 		break;
 
 		case PB1on:
 			if(isButtonPressed){
-				state = PB1pressed;
+				state = PB1on;
 			}
 			else{
-				state = PB1on;
+				state = PB1release;
 			}
 		break;
 
-		case PB1pressed:
+		case PB1release:
 			if(isButtonPressed){
-				state = PB1pressed;
+				state = PB0on;
 			}
 			else{
-				state = PB0on;
+				state = PB1release;
 			}
 		break;
 
@@ -70,14 +70,14 @@ void Tick(){
 			tempB = (tempB & 0x00) | 0x01;
 		break;
 		
-		case PB0pressed:
+		case PB0release:
 		break;
 
 		case PB1on:
 			tempB = (tempB & 0x00) | 0x02;
 		break;
 
-		case PB1pressed:
+		case PB1release:
 		break;
 
 		default:
