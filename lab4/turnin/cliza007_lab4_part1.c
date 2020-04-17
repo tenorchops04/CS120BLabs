@@ -21,15 +21,15 @@ void Tick(){
 	// State transitions
 	switch(state){
 		case Start:
-			state = PB0on;
+			state = PB0release;
 		break;
 
 		case PB0on:
 			if(isButtonPressed){
-				state = PB0release;
+				state = PB0on;
 			}
 			else{
-				state = PB0on;
+				state = PB0release;
 			}
 		break;
 
@@ -91,7 +91,7 @@ int main(void) {
 	DDRB = 0xff; PORTB = 0x00;
 
 	isButtonPressed = 0x00;
-	tempB = 0x00;
+	tempB = 0x01;
 	state = Start;
 
 	/* Insert your solution below */

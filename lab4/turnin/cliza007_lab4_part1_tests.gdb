@@ -43,7 +43,7 @@ expect state PB0release
 checkResult
 
 test "PINA: 0x00, 0x01, 0x00 => PINB: 0x02"
-set state = PB0on
+set state = Start
 setPINA 0x00
 continue 2
 setPINA 0x01
@@ -54,6 +54,21 @@ expectPORTB 0x02
 expect state PB1release
 checkResult
 
+test "PINA: 0x01 => PINB: 0x02"
+set state = Start
+setPINA 0x01
+continue 2
+expectPORTB 0x02
+expect state PB1on
+checkResult
+
+test "PINA: 0x01 => PINB: 0x01"
+set state = PB1release
+setPINA 0x01
+continue 2
+expectPORTB 0x01
+expect state PB0on
+checkResult
 # Add tests below
 
 # Report on how many tests passed/tests ran
