@@ -1,7 +1,7 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #6  Exercise #2
+ *	Assignment: Lab #7  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -145,6 +145,8 @@ void Tick(){
 		case Run1:
 			i++;
 			tmpB = leds[i%4];
+			LCD_ClearScreen();
+			LCD_WriteData(score + '0');
 			break;
 
 		case Press:
