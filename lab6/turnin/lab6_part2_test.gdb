@@ -27,24 +27,37 @@ echo ======================================================\n
 echo Running all tests..."\n\n
 
 # Example test:
-test "2 periods => PORTB : 0x02"
+test "4 periods => PINA: 0x01 on second period"
 set state = Start
+setPINA 0x01
 timeContinue 1
+setPINA 0x01
 timeContinue 1
 expectPORTB 0x02
 checkResult
 
-test "3 periods => PORTB : 0x02"
+test "7 periods => press button on 4th period, hold for 5 periods"
 set state = Start
+setPINA 0x01
 timeContinue 4
-expectPORTB 0x01
-checkResult
-
-test "8 periods => PORTB : 0x02"
-set state = Start
-timeContinue 8
+setPINA 0x00
+timeContinue 5
 expectPORTB 0x02
 checkResult
+
+test "7 periods => press button on second period, release, and continue for 4 periods"
+set state = Start
+setPINA 0x01
+timeContinue 1
+setPINA 0x00
+timeContinue 1
+setPINA 0x01
+timeContinue 1
+setPINA 0x00
+timeContinue 4
+expectPORTB 0x02
+checkResult
+
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed
 eval "shell echo Passed %d/%d tests.\n",$passed,$tests
