@@ -1,0 +1,13 @@
+Breakpoint 1 at 0x34e: file source/main.c, line 167.
+Note: automatically using hardware breakpoints for read-only addresses.
+======================================================
+Running all tests..."
+
+"4 periods => PINA: 0x01 on second period"...
+	Expected 0x04 
+	PORTB '0x800025:	0x01
+"4 periods => PINA: 0x01 on second period"...
+	Expected 0x02 
+	PORTB '0x800025:	0x01
+======================================================
+Remote doesn't know how to detach
