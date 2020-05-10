@@ -1,13 +1,13 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #6  Exercise # 3
+ *	Assignment: Lab #7  Exercise # 1
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  *
- *	Demo link: https://drive.google.com/file/d/1e0y-gCYJ721H0jdWmRhAerO271xQOHfs/view?usp=drivesdk
+ *	Demo link: 
  */
 
 #include <avr/io.h>
