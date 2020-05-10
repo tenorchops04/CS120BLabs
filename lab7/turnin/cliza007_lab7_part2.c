@@ -7,7 +7,7 @@
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  *
- *	Demo link: https://drive.google.com/file/d/1VZ2hRcpZnNEkkz7DTGFyLKGmL8V4UZGM/view?usp=drivesdk
+ *	Demo link: 
  */
 #include <avr/io.h>
 #include "io.h"
