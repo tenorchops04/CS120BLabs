@@ -1,11 +1,13 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section:
- *	Assignment: Lab #8  Exercise #1
+ *	Assignment: Lab #8  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
+ *
+ *	Demo link: 
  */
 #include <avr/io.h>
 #ifdef _SIMULATE_
