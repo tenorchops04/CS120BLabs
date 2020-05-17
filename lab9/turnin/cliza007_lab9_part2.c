@@ -1,7 +1,7 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #9  Exercise #1
+ *	Assignment: Lab #9  Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -43,8 +43,11 @@ void PWM_off() {
 	TCCR3B = 0x00;
 }
 
-enum States{Start, Wait, PA0pressed, PA1pressed, PA2pressed}state;
+enum States{Start, Wait, PA0pressed, PA1pressed, PA2pressed, PA0wait, PA1wait, PA2wait}state;
 unsigned char tempA;
+unsigned char isToggle;
+unsigned char i;
+double notes[] = {261.63, 293.66, 329.63, 349.23, 392.00, 440.0, 493.88, 523.25};
 
 void tick(){
 	tempA = ~PINA & 0x07;
@@ -57,10 +60,10 @@ void tick(){
 			if (tempA == 0x01){
 				state = PA0pressed;
 			}
-			else if (tempA == 0x02){
+			else if (tempA == 0x02 && isToggle){
 				state = PA1pressed;
 			}	
-			else if (tempA == 0x04){
+			else if (tempA == 0x04 && isToggle){
 				state = PA2pressed;
 			}
 			else{
@@ -70,21 +73,42 @@ void tick(){
 
 		case PA0pressed:
 			if (tempA == 0x01)
-				state = PA0pressed;
+				state = PA0wait;
 			else
 				state = Wait;
 			break;
 
 		case PA1pressed:
 			if (tempA  == 0x02)
-				state = PA1pressed;
+				state = PA1wait;
 			else
 				state = Wait;
 			break;
 
 		case PA2pressed:
 			if (tempA == 0x04)
-				state = PA2pressed;
+				state = PA2wait;
+			else
+				state = Wait;
+			break;
+		
+		case PA0wait:
+			if (tempA == 0x01)
+				state = PA0wait;
+			else
+				state = Wait;
+			break;
+		
+		case PA1wait:
+			if (tempA == 0x02)
+				state = PA1wait;
+			else
+				state = Wait;
+			break;
+		
+		case PA2wait:
+			if (tempA == 0x04)
+				state = PA2wait;
 			else
 				state = Wait;
 			break;
@@ -98,19 +122,35 @@ void tick(){
 			break;
 
 		case Wait:
-			set_PWM(0);
+			if(isToggle)
+				set_PWM(notes[i]);
+			else
+				set_PWM(0);
 			break;
 
 		case PA0pressed:
-			set_PWM(261.63);
+			isToggle = !isToggle;
+			if(!isToggle)
+				i = 0;
 			break;
 
 		case PA1pressed:
-			set_PWM(293.66);
+			if(i < 7)
+				i++;
 			break;
 
 		case PA2pressed:
-			set_PWM(329.63);
+			if(i > 0)
+				i--;
+			break;
+
+		case PA0wait:
+			break;
+
+		case PA1wait:
+			break;
+
+		case PA2wait:
 			break;
 
 	}
@@ -124,11 +164,14 @@ int main(void) {
 	PWM_on();
 	tempA = 0x00;
 	state = Start;
+	isToggle = 0;
+	i = 0;
 
 	while (1) {
-		//set_PWM(523.25);
 		tick();
 	}
+
 	PWM_off();
+
 	return 1;
 }
