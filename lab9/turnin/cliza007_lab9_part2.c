@@ -60,10 +60,10 @@ void tick(){
 			if (tempA == 0x01){
 				state = PA0pressed;
 			}
-			else if (tempA == 0x02 && isToggle){
+			else if (tempA == 0x02){
 				state = PA1pressed;
 			}	
-			else if (tempA == 0x04 && isToggle){
+			else if (tempA == 0x04){
 				state = PA2pressed;
 			}
 			else{
@@ -130,8 +130,6 @@ void tick(){
 
 		case PA0pressed:
 			isToggle = !isToggle;
-			if(!isToggle)
-				i = 0;
 			break;
 
 		case PA1pressed:
