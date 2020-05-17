@@ -43,8 +43,11 @@ void PWM_off() {
 	TCCR3B = 0x00;
 }
 
-enum States{Start, Wait, PA0pressed, PA1pressed, PA2pressed}state;
+enum States{Start, Wait, PA0pressed, PA0wait, PA1pressed, PA1wait, PA2pressed, PA2 Wait}state;
 unsigned char tempA;
+unsigned char isToggle;
+unsigned char i;
+double notes[] = {261.63, 293.66, 329.63, 349.23, 392.00, 440.0, 493.88, 523.25};
 
 void tick(){
 	tempA = ~PINA & 0x07;
@@ -70,23 +73,44 @@ void tick(){
 
 		case PA0pressed:
 			if (tempA == 0x01)
-				state = PA0pressed;
+				state = PA0wait;
 			else
 				state = Wait;
 			break;
 
 		case PA1pressed:
 			if (tempA  == 0x02)
-				state = PA1pressed;
+				state = PA1wait;
 			else
 				state = Wait;
 			break;
 
 		case PA2pressed:
 			if (tempA == 0x04)
-				state = PA2pressed;
+				state = PA2wait;
 			else
 				state = Wait;
+			break;
+		
+		case PA0wait:
+			if (tempA == 0x01)
+				state = PA0wait;
+			else
+				state = wait;
+			break;
+		
+		case PA1wait:
+			if (tempA == 0x02)
+				state = PA1wait;
+			else
+				state = wait;
+			break;
+		
+		case PA2wait:
+			if (tempA == 0x04)
+				state = PA2wait;
+			else
+				state = wait;
 			break;
 
 		default:
@@ -98,20 +122,27 @@ void tick(){
 			break;
 
 		case Wait:
-			set_PWM(0);
 			break;
 
 		case PA0pressed:
-			set_PWM(261.63);
 			break;
 
 		case PA1pressed:
-			set_PWM(293.66);
+			if(isToggle)
+				set_PWM(notes[i]);
+			else
+				set_PWM(0);
 			break;
 
 		case PA2pressed:
-			set_PWM(329.63);
+			if(isToggle)
+				set_PWM(notes[i]);
+			else
+				set_PWM(0);
 			break;
+
+		case PA0wait:
+
 
 	}
 }
@@ -124,11 +155,14 @@ int main(void) {
 	PWM_on();
 	tempA = 0x00;
 	state = Start;
+	isToggle = 0;
+	i = 0;
 
 	while (1) {
-		//set_PWM(523.25);
 		tick();
 	}
+
 	PWM_off();
+
 	return 1;
 }
