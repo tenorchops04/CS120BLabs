@@ -20,8 +20,8 @@
 
 
 enum keypadSM_States {kSM_Init, kSM_Wait, kSM_Press };
-unsigned char tempC =  '\0';
-unsigned char tempB = 0x00;
+unsigned char tempC = '\0';
+unsigned char tempB;
 
 int keypadTick(int state){
 	tempC = GetKeypadKey();
@@ -42,7 +42,7 @@ int keypadTick(int state){
 			break;
 
 		case kSM_Press:
-			if(tempC != '\0'){
+			if(tempC == (tempB + '0')){
 				state = kSM_Press;
 			}
 			else{
@@ -93,7 +93,7 @@ int keypadTick(int state){
 
 int main(void) {
 	DDRB = 0xFF; PORTB = 0x00;
-	DDRC = 0xF0; PORTC = 0xF0;
+	DDRA = 0xF0; PORTA = 0xF0;
 	
 	static task task1;
 	task *tasks[] ={&task1};
