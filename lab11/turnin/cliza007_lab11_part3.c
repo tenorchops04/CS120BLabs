@@ -1,7 +1,7 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #11  Exercise #1
+ *	Assignment: Lab #11  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -18,13 +18,13 @@
 #include "bit.h"
 #endif
 
-enum keypadSM_States {kSM_Init, kSM_Wait, kSM_Press };
-unsigned char tempC = '\0';
-unsigned char tempB;
+enum keypadSM_States {kSM_Init, kSM_Wait, kSM_Press, kSM_Wait2, kSM_Release};
+unsigned char tempB = '\0';
+unsigned char isPressed = 0;
 
 int keypadTick(int state){
-	tempC = GetKeypadKey();
-
+	unsigned char tempC = GetKeypadKey();
+	
 	// State transitions
 	switch(state){
 		case kSM_Init:
@@ -41,12 +41,20 @@ int keypadTick(int state){
 			break;
 
 		case kSM_Press:
-			if(tempC == (tempB + '0')){
-				state = kSM_Press;
+			state = kSM_Wait2;
+			break;
+
+		case kSM_Wait2:
+			if(tempC == tempB){
+				state = kSM_Wait2;
 			}
 			else{
-				state = kSM_Wait;
+				state = kSM_Release;
 			}
+			break;
+
+		case kSM_Release:
+			state = kSM_Wait;
 			break;
 
 		default:
@@ -59,29 +67,18 @@ int keypadTick(int state){
 			break;
 
 		case kSM_Wait:
+			isPressed = 0;
 			break;
 			
 		case kSM_Press:
-			switch(tempC){
-				case '\0': tempB = ' '; break;
-				case '1': tempB = '1'; break;
-				case '2': tempB = '2'; break;
-				case '3': tempB = '3'; break;
-				case '4': tempB = '4'; break;
-				case '5': tempB = '5'; break;
-				case '6': tempB = '6'; break;
-				case '7': tempB = '7'; break;
-				case '8': tempB = '8'; break;
-				case '9': tempB = '9'; break;
-				case 'A': tempB = 'A'; break;
-				case 'B': tempB = 'B'; break;
-				case 'C': tempB = 'C'; break;
-				case 'D': tempB = 'D'; break;
-				case '*': tempB = '*'; break;
-				case '0': tempB = '0'; break;
-				case '#': tempB = '#'; break;
-				default: tempB = 0x1B;
-			}
+			tempB = tempC;
+			break;
+
+		case kSM_Wait2:
+			break;
+
+		case kSM_Release:
+			isPressed = 1;
 			break;
 	}
 
@@ -97,12 +94,7 @@ int displayTick(int state){
 			break;
 
 		case d_Display:
-			if(tempC != '\0'){
-				state = d_Display;
-			}
-			else{
-				state = d_Init;
-			}
+			state = d_Display;
 			break;
 
 		default:
@@ -115,9 +107,10 @@ int displayTick(int state){
 			break;
 
 		case d_Display:
-			LCD_ClearScreen();
-			if(tempB != '\0')
+			if(isPressed){
+				LCD_Cursor(1);
 				LCD_WriteData(tempB);
+			}
 			break;
 
 		default: 
