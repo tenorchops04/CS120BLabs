@@ -142,15 +142,58 @@ int playerMoveTick(int state){
 enum obstacleSMStates{o_Init, o_Wait, o_Scroll};
 unsigned char top = 9;
 unsigned char bot = 30;
+unsigned char i = 0;
 
 int obstacleTick(int state){
 	switch(state){
+		case o_Init:
+			state = o_Wait;
+			break;
 
+		case o_Wait:
+			if(isStart){
+				state = o_Scroll;
+			}
+			else{
+				state = o_Wait;
+			}
+			break;
+
+		case o_Scroll:
+			if (isStart){
+				state = o_Scroll;
+			}
+			else{
+				state = o_Wait;
+			}
+			break;
+
+		default:
+			break;
 	}
 
 	// State actions
 	switch(state){
+		case o_Init:
+			break;
 
+		case o_Wait:
+			break;
+
+		case o_Scroll:
+			if(top == 1){
+				top = 16;
+			}
+			if(bot == 17){
+				bot = 32;
+			}
+			LCD_ClearScreen();
+			LCD_Cursor(top);
+			LCD_WriteData('*');
+			LCD_Cursor(bot);
+			LCD_WriteData('*');
+			top--;
+			bot--;
 	}
 
 	return state;
@@ -200,8 +243,8 @@ int main(void) {
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
 	
-	static task task1, task2, task5;
-	task *tasks[] ={&task1, &task2, &task5};
+	static task task1, task2, task3, task5;
+	task *tasks[] ={&task1, &task2, &task3, &task5};
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 
 	const char start = -1;
@@ -216,6 +259,12 @@ int main(void) {
 	task2.period = 200;
 	task2.elapsedTime = task2.period;
 	task2.TickFct = &playerMoveTick;
+	
+	// Task 3 obstacleTask
+	task3.state = o_Init;
+	task3.period = 200;
+	task3.elapsedTime = task3.period;
+	task3.TickFct = &obstacleTick;
 
 	// Task 5 displayTask
 	task5.state = start;
