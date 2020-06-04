@@ -1,7 +1,7 @@
 /*	Author: Celvin Lizama Pena
  *  Partner(s) Name: 
  *	Lab Section: 022
- *	Assignment: Lab #11  Exercise #1
+ *	Assignment: Lab #11  Exercise #4
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -11,104 +11,221 @@
 #include <avr/io.h>
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
-#include "keypad.h"
 #include "timer.h"
 #include "scheduler.h"
-#include "io.h"
-#include "bit.h"
+#include "io.c"
 #endif
 
+enum GameOnSM_States {g_Init, g_Wait, g_Press, g_Wait2, g_Release};
+unsigned char isStart = 0x00;
 
-enum keypadSM_States {kSM_Init, kSM_Wait, kSM_Press };
-unsigned char tempC =  '\0';
-unsigned char tempB = 0x00;
-
-int keypadTick(int state){
-	tempC = GetKeypadKey();
-
+int gameOnTick(int state){
+	unsigned char tempB = ~PINB & 0x01;
+	
 	// State transitions
 	switch(state){
-		case kSM_Init:
-			state = kSM_Wait;
+		case g_Init:
+			state = g_Wait;
 			break;
 
-		case kSM_Wait:
-			if(tempC != '\0'){
-				state = kSM_Press;
+		case g_Wait:
+			if(tempB){
+				state = g_Press;
 			}
 			else{
-				state = kSM_Wait;
+				state = g_Wait;
 			}
 			break;
 
-		case kSM_Press:
-			if(tempC != '\0'){
-				state = kSM_Press;
+		case g_Press:
+			state = g_Wait2;
+			break;
+		
+		case g_Wait2:
+			if(tempB){
+				state = g_Wait2;
 			}
 			else{
-				state = kSM_Wait;
+				state = g_Release;
+			}
+			break;
+
+		case g_Release:
+			state = g_Wait;
+			break;
+
+		default:
+			break;
+	}
+
+	// State actions
+	switch(state){
+		case g_Init:
+			break;
+
+		case g_Wait:
+			break;
+
+		case g_Press:
+			break;
+
+		case g_Wait2:
+			break;
+
+		case g_Release:
+			isStart = ~isStart;
+			break;
+		
+		default:
+			break;
+	}
+	//PORTA = isStart;
+	return state;
+}
+
+enum playerMoveSMStates {p_Init, p_Wait, p_Move};
+unsigned char charPos = 2;
+
+int playerMoveTick(int state){
+	unsigned char up = ~PINB & 0x02;
+	unsigned char down = ~PINB & 0x04;
+
+	// State transitions
+	switch (state){
+		case p_Init:
+			state = p_Wait;
+			break;
+
+		case p_Wait:
+			if(isStart){
+				state = p_Move;
+			}
+			else{
+				state = p_Wait;
+			}
+			break;
+
+		case p_Move:
+			if(!isStart){
+				state = p_Wait;
 			}
 			break;
 
 		default:
-			state = kSM_Wait;
 			break;
 	}
+
 	// State actions
-	switch(state){
-		case kSM_Init:
+	switch (state){
+		case p_Init:
 			break;
 
-		case kSM_Wait:
+		case p_Wait:
 			break;
-			
-		case kSM_Press:
-			switch(tempC){
-				case '\0': tempB = 0x1F; break;
-				case '1': tempB = 0x01; break;
-				case '2': tempB = 0x02; break;
-				case '3': tempB = 0x03; break;
-				case '4': tempB = 0x04; break;
-				case '5': tempB = 0x05; break;
-				case '6': tempB = 0x06; break;
-				case '7': tempB = 0x07; break;
-				case '8': tempB = 0x08; break;
-				case '9': tempB = 0x09; break;
-				case 'A': tempB = 0x0A; break;
-				case 'B': tempB = 0x0B; break;
-				case 'C': tempB = 0x0C; break;
-				case 'D': tempB = 0x0D; break;
-				case '*': tempB = 0x0E; break;
-				case '0': tempB = 0x00; break;
-				case '#': tempB = 0x0F; break;
-				default: tempB = 0x1B;
+
+		case p_Move:
+			if(up){
+				charPos = 2;
+			}
+			else if (down){
+				charPos = 18;
 			}
 			break;
+
+		default:
+			break;
+	}
+	//PORTA = up; 
+	return state;
+}
+
+enum obstacleSMStates{o_Init, o_Wait, o_Scroll};
+unsigned char top = 9;
+unsigned char bot = 30;
+
+int obstacleTick(int state){
+	switch(state){
+
 	}
 
-	PORTB = tempB;
+	// State actions
+	switch(state){
+
+	}
 
 	return state;
 }
 
+enum displaySMStates {d_Init, d_Display};
+
+int displayTick(int state){
+	switch(state){
+		case d_Init:
+			state = d_Display;
+			break;
+
+		case d_Display:
+			state = d_Display;
+			break;
+
+		default:
+			state = d_Init;
+			break;
+	}
+
+	switch(state){
+		case d_Init:
+			break;
+
+		case d_Display:
+			/*if(isStart){
+				LCD_DisplayString(1, "Start");
+			}
+			else{
+				LCD_DisplayString(1, "Pause");
+			}*/
+			LCD_Cursor(charPos);
+			break;
+
+		default: 
+			state = d_Init;
+			break;
+	}
+
+	return state;
+}
 int main(void) {
-	DDRB = 0xFF; PORTB = 0x00;
-	DDRC = 0xF0; PORTC = 0xF0;
+	DDRA = 0xff; PORTA = 0x00;
+	DDRB = 0x00; PORTB = 0xff;
+	DDRC = 0xFF; PORTC = 0x00;
+	DDRD = 0xFF; PORTD = 0x00;
 	
-	static task task1;
-	task *tasks[] ={&task1};
+	static task task1, task2, task5;
+	task *tasks[] ={&task1, &task2, &task5};
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 
 	const char start = -1;
-
-	// Task 1 keypadTick
-	task1.state = start;
-	task1.period = 50;
+	// Task 1 keypadTask
+	task1.state = g_Init;
+	task1.period = 200;
 	task1.elapsedTime = task1.period;
-	task1.TickFct = &keypadTick;
+	task1.TickFct = &gameOnTick;
 
-	TimerSet(50);
+	// Task 2 displayTask
+	task2.state = p_Init;
+	task2.period = 200;
+	task2.elapsedTime = task2.period;
+	task2.TickFct = &playerMoveTick;
+
+	// Task 5 displayTask
+	task5.state = start;
+	task5.period = 200;
+	task5.elapsedTime = task5.period;
+	task5.TickFct = &displayTick;
+	TimerSet(200);
 	TimerOn();
+
+	LCD_init();
 
 	unsigned short i;
 	while (1) {
@@ -117,7 +234,7 @@ int main(void) {
 				tasks[i]->state = tasks[i]->TickFct(tasks[i]->state);
 				tasks[i]->elapsedTime = 0;
 			}
-			tasks[i]->elapsedTime += 50;
+			tasks[i]->elapsedTime += 200;
 		}
 		while(!TimerFlag);
 		TimerFlag = 0;
