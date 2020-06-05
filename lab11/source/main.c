@@ -142,7 +142,6 @@ int playerMoveTick(int state){
 enum obstacleSMStates{o_Init, o_Wait, o_Scroll};
 unsigned char top = 9;
 unsigned char bot = 30;
-unsigned char i = 0;
 
 int obstacleTick(int state){
 	switch(state){
@@ -194,12 +193,52 @@ int obstacleTick(int state){
 			LCD_WriteData('*');
 			top--;
 			bot--;
+			break;
+
+		default:
+			break;
 	}
 
 	return state;
 }
 
-enum displaySMStates {d_Init, d_Display};
+enum collisionSMStates{c_Init, c_Collision};
+unsigned char isCollision = 0x00;
+
+int collisionTick(int state){
+	// State transitions	
+	switch(state){
+		case c_Init:
+			state = c_Collision;
+			break;
+
+		case c_Collision:
+			state = c_Collision;
+			break;
+
+		default:
+			break;
+	}
+	
+	// State actions
+	switch(state){
+		case c_Init:
+			break;
+
+		case c_Collision:
+			if(charPos == top || charPos == bot){
+				isCollision = 0x01;
+			}
+			break;
+
+		default:
+			break;
+	}
+
+	return state;
+}
+
+enum displaySMStates {d_Init, d_Display, d_GameOver, d_Wait};
 
 int displayTick(int state){
 	switch(state){
@@ -208,8 +247,25 @@ int displayTick(int state){
 			break;
 
 		case d_Display:
-			state = d_Display;
+			if(!isCollision){
+				state = d_Display;
+			}
+			else{
+				state = d_GameOver;
+			}
 			break;
+
+		case d_GameOver:
+			state = d_Wait;
+			break;
+
+		case d_Wait:
+			if(isStart){
+				state = d_Display;
+			}
+			else{
+				state = d_Wait;
+			}
 
 		default:
 			state = d_Init;
@@ -221,13 +277,19 @@ int displayTick(int state){
 			break;
 
 		case d_Display:
-			/*if(isStart){
-				LCD_DisplayString(1, "Start");
-			}
-			else{
-				LCD_DisplayString(1, "Pause");
-			}*/
 			LCD_Cursor(charPos);
+			break;
+		
+		case d_GameOver:
+			LCD_ClearScreen();
+			LCD_DisplayString(1, "Game Over!");
+			isStart = 0x00;
+			break;
+
+		case d_Wait:
+			isCollision = 0x00;
+			top = 9;
+			bot = 30;
 			break;
 
 		default: 
@@ -243,8 +305,8 @@ int main(void) {
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
 	
-	static task task1, task2, task3, task5;
-	task *tasks[] ={&task1, &task2, &task3, &task5};
+	static task task1, task2, task3, task4, task5;
+	task *tasks[] ={&task1, &task2, &task3, &task4, &task5};
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 
 	const char start = -1;
@@ -266,6 +328,12 @@ int main(void) {
 	task3.elapsedTime = task3.period;
 	task3.TickFct = &obstacleTick;
 
+	// Task 4 collisionTask
+	task4.state = c_Init;
+	task4.period = 200;
+	task4.elapsedTime = task4.period;
+	task4.TickFct = &collisionTick;
+	
 	// Task 5 displayTask
 	task5.state = start;
 	task5.period = 200;
